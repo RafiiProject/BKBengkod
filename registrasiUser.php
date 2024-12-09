@@ -67,7 +67,7 @@ if (isset($_POST['register'])) {
         }
 
         .login-container {
-            display: flex;
+        
             max-width: 1200px;
             /* Ubah max-width sesuai kebutuhan */
             background-color: #fff;
