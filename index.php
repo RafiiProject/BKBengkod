@@ -124,7 +124,7 @@ function redirectToLoginIfNotLoggedIn() {
     Sistem Informasi Layanan Kesehatan
 </h5>
     <marquee style="position: absolute; bottom: 0; background-color: rgba(0,0,0,0.5); color: white; width: 100%; padding: 10px;">
-        Pakai Masker - Tetap Jaga Protokol Kesehatan!
+        - Tetap Jaga Kesehatan Ya Gaes! -
     </marquee>
 </div>
     <div class="container mt-5">
