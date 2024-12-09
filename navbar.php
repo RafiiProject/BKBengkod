@@ -9,11 +9,11 @@
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="index.php">Home</a>
         </li>
-      <ul class="navbar-nav ms-auto">
+      <!-- <ul class="navbar-nav ms-auto">
           <li class="nav-item">
             <a class="nav-link" href="loginUser.php">Login Admin</a>
           </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </nav>

@@ -118,7 +118,7 @@
                 </form>
 
             </div>
-            <div class="text-center mt-3"> <a href="loginUser.php"><span
+            <div class="text-center mt-3"> <a href="loginPasien.php"><span
                         class="text-primary">Pasien klik disini</span></a>
             </div>
         </div>
