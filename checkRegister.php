@@ -55,6 +55,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-
+// Tutup koneksi
 mysqli_close($mysqli);
 ?>
