@@ -81,7 +81,7 @@ if ($id_poli) {
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <h1 class="m-0 text-center">Selamat Datang <b>Dokter <?php echo htmlspecialchars($username); ?></b></h1>
-                    <h4 class="m-0 text-center">Anda berada di <?php echo htmlspecialchars($nama_poli); ?></h4>
+                    <h4 class="m-0 text-center">Anda berada di <b>Poli <?php echo htmlspecialchars($nama_poli); ?></b></h4>
                 </div>
             </div>
         </div>
