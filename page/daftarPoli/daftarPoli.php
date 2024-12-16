@@ -1,5 +1,5 @@
 <?php
-    require '../../config/koneksi.php';
+    require '../koneksi.php';
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $no_rm = $_POST['no_rm'];
         $idJadwal = $_POST['jadwal'];
@@ -43,35 +43,5 @@
             }
         }
 
-        // $cekData = "SELECT * FROM daftar_poli";
-        // $queryCekData = mysqli_query($mysqli,$cekData);
-        // if (mysqli_num_rows($queryCekData)<1) {
-        //     $noAntrian = 1;
-
-        //     $daftarPoli = "INSERT INTO daftar_poli (id_pasien, id_jadwal, keluhan, no_antrian, status_periksa) VALUES ('$idPasien', '$idJadwal', '$keluhan', '$noAntrian', '0')";
-            
-        //     // if ($daftarPoli) {
-        //     //     echo '<script>alert("Berhasil mendaftar poli");window.location.href="../logout.php";</script>';
-        //     // }
-        //     // else{
-        //     //     echo '<script>alert("Berhasil mendaftar poli");window.location.href="../../daftarPoli.php";</script>';
-        //     // }
-        // }
-        // else{
-        //     $cekNoAntrian = "SELECT * FROM daftar_poli ORDER BY no_antrian DESC LIMIT 1";
-        //     $queryNoAntrian = mysqli_query($mysqli,$cekNoAntrian);
-        //     $dataPoli = mysqli_fetch_assoc($queryNoAntrian);
-        //     $antrianTerakhir = (int) $dataPoli['no_antrian'];
-        //     $antrianBaru = $antrianTerakhir += 1;
-
-        //     $daftarPoli = "INSERT INTO daftar_poli (id_pasien, id_jadwal, keluhan, no_antrian, status_periksa) VALUES ('$idPasien', '$idJadwal', '$keluhan', '$antrianBaru', '0')";
-
-        //     // if ($daftarPoli) {
-        //     //     echo '<script>alert("Berhasil mendaftar poli");window.location.href="../logout.php";</script>';
-        //     // }
-        //     // else{
-        //     //     echo '<script>alert("Berhasil mendaftar poli");window.location.href="../../daftarPoli.php";</script>';
-        //     // }
-        // }
     }
 ?>

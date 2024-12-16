@@ -1,5 +1,5 @@
 <?php
-    require 'config/koneksi.php';
+    require 'koneksi.php';
     $id = $_GET['id'];
     $ambilDetail = mysqli_query($mysqli, "SELECT 
         dp.id as idDetailPeriksa,

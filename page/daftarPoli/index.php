@@ -34,7 +34,7 @@
                             <select class="form-control" id="poli" name="poli" required>
                             <option value="" disabled selected>Pilih Poli</option>
                                 <?php
-                                require 'config/koneksi.php';
+                                require 'koneksi.php';
                                 $query = "SELECT * FROM poli";
                                 $result = mysqli_query($mysqli,$query);
                                 while ($dataPoli = mysqli_fetch_assoc($result)) {
@@ -86,7 +86,7 @@
 
                             <!-- TAMPILKAN DATA OBAT DI SINI -->
                             <?php
-                            require 'config/koneksi.php';
+                            require 'koneksi.php';
                             $no = 1;
                             $query = "SELECT daftar_poli.id as idDaftarPoli, poli.nama_poli, dokter.nama, jadwal_periksa.hari, jadwal_periksa.jam_mulai, jadwal_periksa.jam_selesai, daftar_poli.no_antrian FROM daftar_poli INNER JOIN jadwal_periksa ON daftar_poli.id_jadwal = jadwal_periksa.id INNER JOIN dokter ON jadwal_periksa.id_dokter = dokter.id INNER JOIN poli ON dokter.id_poli = poli.id WHERE daftar_poli.id_pasien = '$idPasien'";
                             $result = mysqli_query($mysqli, $query);
