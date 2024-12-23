@@ -1,20 +1,26 @@
+<?php
+require 'koneksi.php'; // Pastikan koneksi ke database sudah benar
+
+// Tidak menggunakan $id_dokter karena struktur tabel tidak menunjukkannya
+?>
+
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0">Daftar Periksa Pasien</h1>
-            </div><!-- /.col -->
+            </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="index.php?page=home">Home</a></li>
                     <li class="breadcrumb-item active">Daftar Periksa</li>
                 </ol>
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+            </div>
+        </div>
+    </div>
 </div>
-<!-- /.content-header -->
+
 <!-- Main content -->
 <div class="content">
     <div class="container-fluid">
@@ -26,71 +32,65 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Pasien</th>
-                                    <th>Keluhan</th>
+                                    <th>ID Daftar Poli</th>
+                                    <th>Tanggal Periksa</th>
+                                    <th>Catatan</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php 
                                     $no = 1;
-                                    require 'koneksi.php';
-                                    $query = "SELECT pasien.nama, daftar_poli.keluhan, daftar_poli.status_periksa, daftar_poli.id FROM daftar_poli INNER JOIN pasien ON daftar_poli.id_pasien = pasien.id INNER JOIN jadwal_periksa ON daftar_poli.id_jadwal = jadwal_periksa.id INNER JOIN dokter ON jadwal_periksa.id_dokter = dokter.id WHERE dokter.id = '$id_dokter'";
-                                    $result = mysqli_query($mysqli,$query);
 
-                                    while ($data = mysqli_fetch_assoc($result)) {
-                                        # code...
+                                    // Query untuk mendapatkan data dari tabel periksa
+                                    $query = "
+                                        SELECT 
+                                            id_daftar_poli, 
+                                            tgl_periksa, 
+                                            catatan 
+                                        FROM 
+                                            periksa
+                                    ";
+                                    $result = mysqli_query($mysqli, $query);
+
+                                    if (!$result) {
+                                        echo "<tr><td colspan='5'>Error pada query: " . htmlspecialchars(mysqli_error($mysqli)) . "</td></tr>";
+                                    } else {
+                                        while ($data = mysqli_fetch_assoc($result)) {
                                 ?>
                                 <tr>
-                                    <td><?php echo $no++ ?></td>
-                                    <td><?php echo $data['nama']; ?></td>
-                                    <td><?php echo $data['keluhan']; ?></td>
+                                    <td><?php echo $no++; ?></td>
+                                    <td><?php echo htmlspecialchars($data['id_daftar_poli']); ?></td>
+                                    <td><?php echo htmlspecialchars($data['tgl_periksa']); ?></td>
+                                    <td><?php echo htmlspecialchars($data['catatan']); ?></td>
                                     <td>
-                                        <?php if ($data['status_periksa']==1) {
-                                        ?>
-                                        <button type='button' class='btn btn-sm btn-warning edit-btn'
-                                            data-toggle="modal"
-                                            data-target="#editModal<?php echo $data['id'] ?>">Edit</button>
-                                            <div class="modal fade" id="editModal<?php echo $data['id'] ?>" tabindex="-1"
-                                            role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+                                        <button type="button" class="btn btn-sm btn-warning edit-btn" data-toggle="modal"
+                                            data-target="#editModal<?php echo $data['id_daftar_poli']; ?>">Edit</button>
+                                        <div class="modal fade" id="editModal<?php echo $data['id_daftar_poli']; ?>" tabindex="-1"
+                                            role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="addModalLabel">Edit Periksa Pasien</h5>
+                                                        <h5 class="modal-title" id="editModalLabel">Edit Periksa Pasien</h5>
                                                         <button type="button" class="close" data-dismiss="modal"
                                                             aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <!-- Form tambah data obat disini -->
-
-                                                        <?php
-                                                            $idDaftarPoli = $data['id'];
-                                                            require 'config/koneksi.php';
-                                                            $ambilDataPeriksa = mysqli_query($mysqli,"SELECT * FROM periksa INNER JOIN daftar_poli ON periksa.id_daftar_poli = daftar_poli.id WHERE daftar_poli.id = '$idDaftarPoli'");
-                                                            $ambilData = mysqli_fetch_assoc($ambilDataPeriksa);
-                                                        ?>
-                                                        <form action="pages/periksaPasien/editPeriksa.php"
-                                                            method="post">
-                                                            <input type="hidden" name="id"
-                                                                value="<?php echo $data['id'] ?>">
-                                                            <div class="form-group">
-                                                                <label for="nama">Nama Pasien</label>
-                                                                <input type="text" class="form-control" id="nama"
-                                                                    name="nama" required
-                                                                    value="<?php echo $data['nama'] ?>" readonly>
-                                                            </div>
+                                                        <form action="pages/periksaPasien/editPeriksa.php" method="post">
+                                                            <input type="hidden" name="id_daftar_poli"
+                                                                value="<?php echo htmlspecialchars($data['id_daftar_poli']); ?>">
                                                             <div class="form-group">
                                                                 <label for="tanggal_periksa">Tanggal Periksa</label>
                                                                 <input type="datetime-local" class="form-control"
-                                                                    id="tanggal_periksa" name="tanggal_periksa"
-                                                                    required value="<?php echo $ambilData['tgl_periksa'] ?>">
+                                                                    id="tanggal_periksa" name="tanggal_periksa" required
+                                                                    value="<?php echo htmlspecialchars($data['tgl_periksa']); ?>">
                                                             </div>
                                                             <div class="form-group mb-3">
                                                                 <label for="catatan">Catatan</label>
                                                                 <textarea class="form-control" rows="3" id="catatan"
-                                                                    name="catatan" required><?php echo $ambilData['catatan'] ?></textarea>
+                                                                    name="catatan" required><?php echo htmlspecialchars($data['catatan']); ?></textarea>
                                                             </div>
                                                             <button type="submit" class="btn btn-success">Simpan</button>
                                                         </form>
@@ -98,93 +98,14 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <?php  } else { ?>
-                                        <button type='button' class='btn btn-sm btn-info edit-btn' data-toggle="modal"
-                                            data-target="#periksaModal<?php echo $data['id'] ?>">Periksa</button>
-                                        <div class="modal fade" id="periksaModal<?php echo $data['id'] ?>" tabindex="-1"
-                                            role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="addModalLabel">Periksa Pasien</h5>
-                                                        <button type="button" class="close" data-dismiss="modal"
-                                                            aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <!-- Form tambah data obat disini -->
-                                                        <form action="pages/periksaPasien/periksaPasien.php"
-                                                            method="post">
-                                                            <input type="hidden" name="id"
-                                                                value="<?php echo $data['id'] ?>">
-                                                            <div class="form-group">
-                                                                <label for="nama">Nama Pasien</label>
-                                                                <input type="text" class="form-control" id="nama"
-                                                                    name="nama" required
-                                                                    value="<?php echo $data['nama'] ?>" disabled>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <label for="tanggal_periksa">Tanggal Periksa</label>
-                                                                <input type="datetime-local" class="form-control"
-                                                                    id="tanggal_periksa" name="tanggal_periksa"
-                                                                    required>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label for="catatan">Catatan</label>
-                                                                <textarea class="form-control" rows="3" id="catatan"
-                                                                    name="catatan" required></textarea>
-                                                            </div>
-                                                            <div class="form-group mb-3">
-                                                                <label>Obat</label>
-                                                                <select class="select2" multiple="multiple"
-                                                                    data-placeholder="Pilih Obat" style="width: 100%;"
-                                                                    name="obat[]">
-                                                                    <?php 
-                                                                        require 'config/koneksi.php';
-                                                                        $getObat = "SELECT * FROM obat";
-                                                                        $queryObat = mysqli_query($mysqli,$getObat);
-                                                                        while ($datas = mysqli_fetch_assoc($queryObat)) {
-                                                                    ?>
-                                                                    <option value="<?php echo $datas['id'] ?>">
-                                                                        <?php echo $datas['nama_obat'] ?></option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                            </div>
-                                                            <button type="submit" class="btn btn-info">Periksa</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <?php } ?>
                                     </td>
                                 </tr>
-                                <?php } ?>
+                                <?php } } ?>
                             </tbody>
                         </table>
                     </div>
-                    <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
             </div>
         </div>
-        <!-- /.row -->
-    </div><!-- /.container-fluid -->
+    </div>
 </div>
-<!-- /.content -->
-<script>
-    function hitungTotal() {
-        // Ambil semua elemen select dengan name "obat[]"
-        var selectedObat = document.querySelectorAll('select[name="obat[]"] option:checked');
-        
-        var totalHarga = 150000; // Harga awal
-        // Iterasi melalui obat yang dipilih dan tambahkan harga masing-masing
-        selectedObat.forEach(function(option) {
-            totalHarga += parseInt(option.getAttribute('data-harga')) || 0;
-        });
-
-        // Tampilkan total harga
-        document.getElementById('totalHarga').innerText = 'Total Harga: ' + totalHarga;
-    }
-</script>
