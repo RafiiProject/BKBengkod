@@ -1,5 +1,5 @@
 <?php
-include 'koneksi.php';
+include '../../koneksi.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -10,30 +10,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $jamMulai = $_POST["jamMulai"];
     $jamSelesai = $_POST["jamSelesai"];
 
-    // Query untuk cek jadwal yang bertabrakan
-    $queryOverlap = "SELECT * FROM jadwal_periksa 
-                     WHERE id_dokter = '$idDokter' AND hari = '$hari' 
-                     AND ((jam_mulai < '$jamSelesai' AND jam_selesai > '$jamMulai') 
-                     OR (jam_mulai < '$jamMulai' AND jam_selesai > '$jamMulai'))";
+    // Cek apakah dokter ini sudah memiliki jadwal aktif
+    $cekAktifQuery = "SELECT * FROM jadwal_periksa WHERE id_dokter = '$idDokter' AND aktif = '1'";
+    $resultAktif = mysqli_query($mysqli, $cekAktifQuery);
 
-    $resultOverlap = mysqli_query($mysqli, $queryOverlap);
-    
-    if (mysqli_num_rows($resultOverlap) > 0) {
-        echo '<script>alert("Dokter lain telah mengambil jadwal ini!");window.location.href="../jadwalPeriksa.php";</script>';
+    if (mysqli_num_rows($resultAktif) > 0) {
+        echo '<script>alert("Dokter hanya dapat memiliki satu jadwal aktif! Nonaktifkan jadwal lain terlebih dahulu.");window.location.href="../../jadwalPeriksa.php";</script>';
     } else {
-        // Query untuk menambahkan jadwal baru
-        $queryInsert = "INSERT INTO jadwal_periksa (id_dokter, hari, jam_mulai, jam_selesai) 
-                        VALUES ('$idDokter', '$hari', '$jamMulai', '$jamSelesai')";
+        // Validasi jadwal overlap
+        $queryOverlap = "SELECT * FROM jadwal_periksa 
+                         WHERE id_dokter = '$idDokter' 
+                         AND hari = '$hari' 
+                         AND ((jam_mulai < '$jamSelesai' AND jam_selesai > '$jamMulai') 
+                         OR (jam_mulai < '$jamMulai' AND jam_selesai > '$jamMulai'))";
 
-        if (mysqli_query($mysqli, $queryInsert)) {
-            echo '<script>';
-            echo 'alert("Jadwal berhasil ditambahkan!");';
-            echo 'window.location.href = "../jadwalPeriksa.php";';
-            echo '</script>';
-            exit();
+        $resultOverlap = mysqli_query($mysqli, $queryOverlap);
+        
+        if (mysqli_num_rows($resultOverlap) > 0) {
+            echo '<script>alert("Jadwal ini berbenturan dengan jadwal lain.");window.location.href="../../jadwalPeriksa.php";</script>';
         } else {
-            // Jika terjadi kesalahan, tampilkan pesan error
-            echo "Error: " . $queryInsert . "<br>" . mysqli_error($mysqli);
+            // Tambahkan jadwal baru
+            $query = "INSERT INTO jadwal_periksa (id_dokter, hari, jam_mulai, jam_selesai, aktif) 
+                      VALUES ('$idDokter', '$hari', '$jamMulai', '$jamSelesai', '2')";
+
+            if (mysqli_query($mysqli, $query)) {
+                echo '<script>';
+                echo 'alert("Jadwal berhasil ditambahkan!");';
+                echo 'window.location.href = "../../jadwalPeriksa.php";';
+                echo '</script>';
+                exit();
+            } else {
+                echo "Error: " . $query . "<br>" . mysqli_error($mysqli);
+            }
         }
     }
 }

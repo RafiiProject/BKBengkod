@@ -23,7 +23,7 @@
                     <h3 class="card-title">Daftar Poli</h3>
                 </div>
                 <div class="card-body">
-                    <form action="pages/daftarPoli/daftarPoli.php" method="post">
+                    <form action="page/daftarPoli/daftarPoli.php" method="post">
                         <div class="form-group mb-3">
                             <label for="no_rm font-weight-bold">No Rekam Medis</label>
                             <input type="text" class="form-control" name="no_rm"

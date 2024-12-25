@@ -41,7 +41,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <?php include ('pages/detailDaftarPoli/index.php') ?>
+            <?php include ('page/detailDaftarPoli/index.php') ?>
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
